@@ -22,6 +22,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	stockinfo.RegisterStockInfoServiceServer(s, &server{})
+	//this is used to allow API inspection via grpc_cli tool
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
