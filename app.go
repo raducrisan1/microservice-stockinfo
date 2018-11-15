@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/rand"
 	"net"
@@ -16,7 +17,7 @@ import (
 type server struct{}
 
 func main() {
-	lis, err := net.Listen("tcp", ":3000")
+	lis, err := net.Listen("tcp", ":3001")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
@@ -24,9 +25,16 @@ func main() {
 	stockinfo.RegisterStockInfoServiceServer(s, &server{})
 	//this is used to allow API inspection via grpc_cli tool
 	reflection.Register(s)
+	stop := ossignal()
+	go func() {
+		<-stop
+		s.Stop()
+	}()
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
+	fmt.Println("The server has stopped")
 }
 
 func (s *server) StockInfo(context.Context, *stockinfo.StockInfoRequest) (*stockinfo.StockInfoResponse, error) {
