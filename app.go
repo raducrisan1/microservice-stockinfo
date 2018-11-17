@@ -30,11 +30,11 @@ func main() {
 		<-stop
 		s.Stop()
 	}()
-
+	fmt.Println("Server started on port 3001")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
-	fmt.Println("The server has stopped")
+	fmt.Println("\nThe server has stopped")
 }
 
 func (s *server) StockInfo(context.Context, *stockinfo.StockInfoRequest) (*stockinfo.StockInfoResponse, error) {
