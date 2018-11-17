@@ -30,7 +30,7 @@ func main() {
 		<-stop
 		s.Stop()
 	}()
-	fmt.Println("Server started on port 3001")
+	fmt.Println("StockInfo node started on port 3001")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
