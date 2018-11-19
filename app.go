@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math/rand"
 	"net"
+	"os"
 	"strconv"
 	"time"
 
@@ -17,7 +17,8 @@ import (
 type server struct{}
 
 func main() {
-	lis, err := net.Listen("tcp", ":3001")
+	addr := os.Getenv("STOCKINFO_LISTEN_ADDR")
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
@@ -30,11 +31,11 @@ func main() {
 		<-stop
 		s.Stop()
 	}()
-	fmt.Println("StockInfo node started on port 3001")
+	log.Printf("StockInfo node started listening at %v", addr)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
-	fmt.Println("\nThe server has stopped")
+	log.Println("\nThe server has stopped")
 }
 
 func (s *server) StockInfo(context.Context, *stockinfo.StockInfoRequest) (*stockinfo.StockInfoResponse, error) {
